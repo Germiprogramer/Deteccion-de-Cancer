@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.models import Model
 import cv2
 import seaborn as sns
-
-
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from sklearn.metrics import precision_score, recall_score, confusion_matrix
 
 
@@ -29,8 +29,6 @@ test_generator = test_datagen.flow_from_directory(
     class_mode='binary'
 )
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 
 # Creación del modelo CNN
 model = Sequential()
@@ -95,3 +93,28 @@ plt.show()
 def grad_cam(input_model, image, layer_name):
     # Procesamiento para generar mapa de calor
     pass  # Aquí implementarías el Grad-CAM
+
+
+# Hacer predicciones sobre las imágenes de prueba
+y_pred_prob = model.predict(test_generator)
+y_pred = (y_pred_prob > 0.5).astype(int)  # Convertir probabilidades a 0 (benigno) y 1 (maligno)
+
+# Obtener las etiquetas reales del test set
+y_true = test_generator.classes  # Las etiquetas verdaderas (0 para benigno, 1 para maligno)
+
+
+# Comparar las predicciones con las etiquetas reales
+correct_predictions = np.where(y_pred == y_true)[0]  # Índices de las predicciones correctas
+incorrect_predictions = np.where(y_pred != y_true)[0]  # Índices de las predicciones incorrectas
+
+# Mostrar resultados
+print(f"Total de imágenes de prueba: {len(y_true)}")
+print(f"Imágenes correctamente clasificadas: {len(correct_predictions)}")
+print(f"Imágenes incorrectamente clasificadas: {len(incorrect_predictions)}")
+
+# Detallar algunos resultados (puedes ajustar cuántos mostrar)
+for i in correct_predictions[:5]:  # Muestra hasta 5 predicciones correctas
+    print(f"Imagen {i}: Correcto - Etiqueta real: {y_true[i]}, Predicción: {y_pred[i]}")
+
+for i in incorrect_predictions[:5]:  # Muestra hasta 5 predicciones incorrectas
+    print(f"Imagen {i}: Incorrecto - Etiqueta real: {y_true[i]}, Predicción: {y_pred[i]}")
