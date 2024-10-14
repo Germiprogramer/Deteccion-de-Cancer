@@ -50,11 +50,6 @@ model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(BatchNormalization())
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Tercera capa de convolución, batch normalization y pooling
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(BatchNormalization())
-model.add(MaxPooling2D(pool_size=(2, 2)))
-
 # Cuarta capa de convolución y pooling
 model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(BatchNormalization())
